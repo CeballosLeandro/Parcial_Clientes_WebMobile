@@ -14,6 +14,7 @@ function useFetch(url) {
     async function obtenerDatos() {
       setCargando(true);
       setError('');
+      setDatos(null);
 
       try {
         const respuesta = await fetch(url, {
@@ -25,7 +26,13 @@ function useFetch(url) {
         }
 
         const resultado = await respuesta.json();
+
+        if (resultado.Response === 'False') {
+          throw new Error('No se encontraron resultados.');
+        }
+
         setDatos(resultado);
+
       } catch (err) {
         if (err.name !== 'AbortError') {
           setError(err.message);
